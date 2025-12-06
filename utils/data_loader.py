@@ -43,11 +43,7 @@ class FashionMNISTDataset(Dataset):
         """
         image = self.images[index]
         label = self.labels[index]
-        image = torch.from_numpy(image).float().unsqueeze(0) / 255.0
-        # if self.transform:
-        #     image = self.transform(image)
-        # else:
-        #     image = torch.from_numpy(image).float().unsqueeze(0) / 255.0
+        image = self.transform(image)
 
         return image, label
 
@@ -66,7 +62,14 @@ def fashion_mnist_data_loader(config, mode='train'):
 
     if mode == 'train':
         transform = transforms.Compose([
+            # Flips the image horizontally
+            transforms.RandomHorizontalFlip(p=0.5),
+            # Rotate the images randomly
+            transforms.RandomRotation(degrees=75),
+            # Create random shifts of images
+            transforms.RandomAffine(degrees=0, translate=(0.075, 0.075)),
             transforms.ToTensor(),
+            transforms.Normalize((0.2860,), (0.3530,))
         ])
         dataset = FashionMNISTDataset(
             image_path,
@@ -81,7 +84,8 @@ def fashion_mnist_data_loader(config, mode='train'):
         return train_loader, validate_loader
     elif mode == 'test':
         transform = transforms.Compose([
-            transforms.ToTensor()
+            transforms.ToTensor(),
+            transforms.Normalize((0.2860,), (0.3530,))
         ])
         dataset = FashionMNISTDataset(
             image_path,
