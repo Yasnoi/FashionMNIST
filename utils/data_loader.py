@@ -62,12 +62,16 @@ def fashion_mnist_data_loader(config, mode='train'):
 
     if mode == 'train':
         transform = transforms.Compose([
+            # Convert to PIL
+            transforms.ToPILImage(),
             # Flips the image horizontally
             transforms.RandomHorizontalFlip(p=0.5),
-            # Rotate the images randomly
-            transforms.RandomRotation(degrees=75),
             # Create random shifts of images
-            transforms.RandomAffine(degrees=0, translate=(0.075, 0.075)),
+            transforms.RandomAffine(
+                degrees=7.5,
+                translate=(0.078, 0.075),
+                scale=(0.915, 1.085)
+            ),
             transforms.ToTensor(),
             transforms.Normalize((0.2860,), (0.3530,))
         ])
