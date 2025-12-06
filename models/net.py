@@ -1,7 +1,4 @@
-# models/net.py
-
 import torch.nn as nn
-import torch.nn.functional as F
 import models.layers as layers
 
 
@@ -30,6 +27,7 @@ class Net(nn.Module):
             nn.Conv2d(256, 512, kernel_size=3, stride=1, padding=1),
             nn.BatchNorm2d(512),
             nn.ReLU(),
+            nn.MaxPool2d(2, 2),
             # (batch_size, 512, 3, 3)
             nn.Dropout2d(0.4),
 

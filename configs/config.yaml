@@ -6,9 +6,9 @@ data:
   test_labels_file: "t10k-labels-idx1-ubyte"
 
 model:
-  batch_size: 64
+  batch_size: 128
   epochs: 50
-  learning_rate: 0.0003
+  learning_rate: 0.0008
   device: "cpu"
 
   scheduler:

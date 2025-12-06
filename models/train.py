@@ -21,7 +21,7 @@ class TrainNet:
 
         self.model = Net().to(self.device)
         self.optimizer = optim.Adam(self.model.parameters(), lr=self.learning_rate)
-        self.criterion = nn.CrossEntropyLoss()
+        self.criterion = nn.CrossEntropyLoss(label_smoothing=0.1)
 
         # variable learning_rate
         schedule_config = config['model']['scheduler']

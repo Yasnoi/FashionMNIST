@@ -83,8 +83,8 @@ def fashion_mnist_data_loader(config, mode='train'):
         train_size = int(0.9 * len(dataset))
         validate_size = len(dataset) - train_size
         train_set, validate_set = torch.utils.data.random_split(dataset, [train_size, validate_size])
-        train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True)
-        validate_loader = DataLoader(validate_set, batch_size=batch_size, shuffle=True)
+        train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True, num_workers=2)
+        validate_loader = DataLoader(validate_set, batch_size=batch_size, shuffle=True, num_workers=2)
         return train_loader, validate_loader
     elif mode == 'test':
         transform = transforms.Compose([
@@ -96,5 +96,5 @@ def fashion_mnist_data_loader(config, mode='train'):
             label_path,
             transform
         )
-        test_loader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
+        test_loader = DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=2)
         return test_loader
