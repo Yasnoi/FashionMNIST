@@ -3,6 +3,7 @@ import torch.optim as optim
 from torch import nn
 import os
 import copy
+from datetime import datetime
 
 from models.net import Net
 from utils.data_loader import fashion_mnist_data_loader
@@ -17,7 +18,7 @@ class TrainNet:
         self.epochs = config['model']['epochs']
         self.learning_rate = config['model']['learning_rate']
 
-        self.save_path = os.path.join(config['output']['checkpoint_dir'], config['output']['model_save_name'])
+        self.save_path = os.path.join(config['output']['checkpoint_dir'], config['output']['model_save_name'], datetime.now().strftime('-%Y_%m_%d_%H_%M'))
 
         self.model = Net().to(self.device)
         self.optimizer = optim.Adam(self.model.parameters(), lr=self.learning_rate)
@@ -106,7 +107,7 @@ class TrainNet:
                   f'Validate Loss: {validate_loss:.4f}, Validate Accuracy: {validate_accuracy:.2f}%')
             # variable learning_rate
             if self.scheduler:
-                self.scheduler.step(validate_loss)
+                self.scheduler.step(validate_accuracy)
             # early stopping
             if validate_loss < self.best_validate_loss - self.early_stopping_min_delta:
                 self.best_validate_loss = validate_loss

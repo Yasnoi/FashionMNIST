@@ -13,14 +13,14 @@ model:
 
   scheduler:
     name: "ReduceLROnPlateau"
-    mode: "min"
+    mode: "max"
     factor: 0.1               # the coefficient of `learning_rate` reduction
-    patience: 5               # max epochs before reducing `learning_rate`
+    patience: 3               # max epochs before reducing `learning_rate`
     min_lr: 1.0e-6            # min value of `learning_rate`
     verbose: True             # whether print changes of `learning_rate`
 
   early_stopping:
-    patience: 10              # max epochs before stopping training
+    patience: 6               # max epochs before stopping training
     min_delta: 0.0001         # min reduction in `loss`, considered an improvement
 
 output:
