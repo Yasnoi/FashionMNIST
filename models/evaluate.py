@@ -59,6 +59,6 @@ class EvaluateNet:
 
         with open(self.results_save_path, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
-            writer.writerow(['Id', 'Label'])
+            writer.writerow(['id', 'label'])
             writer.writerows(result)
         print(f'Results saved to {self.results_save_path}')
