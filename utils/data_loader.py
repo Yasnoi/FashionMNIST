@@ -65,15 +65,16 @@ def fashion_mnist_data_loader(config, mode='train'):
             # Convert to PIL
             transforms.ToPILImage(),
             # Flips the image horizontally
-            transforms.RandomHorizontalFlip(p=0.5),
+            # transforms.RandomHorizontalFlip(p=0.5),
             # Create random shifts of images
             transforms.RandomAffine(
-                degrees=7.5,
+                degrees=0.75,
                 translate=(0.078, 0.075),
                 scale=(0.915, 1.085)
             ),
             transforms.ToTensor(),
-            transforms.Normalize((0.2860,), (0.3530,))
+            transforms.Normalize((0.2860,), (0.3530,)),
+            transforms.RandomErasing(p=0.3, scale=(0.02, 0.33))
         ])
         dataset = FashionMNISTDataset(
             image_path,

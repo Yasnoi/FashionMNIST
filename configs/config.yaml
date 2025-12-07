@@ -9,6 +9,7 @@ model:
   batch_size: 128
   epochs: 50
   learning_rate: 0.0008
+  weight_decay: 0.01
   device: "cpu"
 
   scheduler:
@@ -20,10 +21,10 @@ model:
     verbose: True             # whether print changes of `learning_rate`
 
   early_stopping:
-    patience: 6               # max epochs before stopping training
+    patience: 7               # max epochs before stopping training
     min_delta: 0.0001         # min reduction in `loss`, considered an improvement
 
 output:
   checkpoint_dir: "outputs/checkpoints/"
   log_dir: "outputs/logs/"
-  model_save_name: "Fashion_MNIST_model.pt"
+  model_save_name: "Fashion_MNIST_model"

@@ -17,11 +17,13 @@ class TrainNet:
 
         self.epochs = config['model']['epochs']
         self.learning_rate = config['model']['learning_rate']
+        self.weight_decay = config['model']['weight_decay']
 
-        self.save_path = os.path.join(config['output']['checkpoint_dir'], config['output']['model_save_name'], datetime.now().strftime('-%Y_%m_%d_%H_%M'))
+        self.file_name = f"{config['output']['model_save_name']}{datetime.now().strftime('_%Y-%m-%d-%H-%M')}.pt"
+        self.save_path = os.path.join(config['output']['checkpoint_dir'], self.file_name)
 
         self.model = Net().to(self.device)
-        self.optimizer = optim.Adam(self.model.parameters(), lr=self.learning_rate)
+        self.optimizer = optim.AdamW(self.model.parameters(), lr=self.learning_rate, weight_decay=self.weight_decay)
         self.criterion = nn.CrossEntropyLoss(label_smoothing=0.1)
 
         # variable learning_rate

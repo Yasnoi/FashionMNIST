@@ -15,7 +15,7 @@ class EvaluateNet:
 
         self.model = Net().to(self.device)
         checkpoint_dir = config['output']['checkpoint_dir']
-        model_save_name = config['output'].get('model_save_name', 'Fashion_MNIST_model.pt')
+        model_save_name = input('Enter model save name: ')
         model_path = os.path.join(checkpoint_dir, model_save_name)
         if not os.path.exists(model_path):
             raise FileNotFoundError(f'Error: Model checkpoint not found at {model_path}')
