@@ -27,14 +27,20 @@ class TrainNet:
         self.criterion = nn.CrossEntropyLoss(label_smoothing=0.1)
 
         # variable learning_rate
-        schedule_config = config['model']['scheduler']
-        if schedule_config['name'] == 'ReduceLROnPlateau':
+        self.schedule_config = config['model']['scheduler']
+        if self.schedule_config['name'] == 'CosineAnnealingLR':
+            self.scheduler = optim.lr_scheduler.CosineAnnealingLR(
+                self.optimizer,
+                T_max=self.epochs,
+                eta_min=self.schedule_config['min_lr']
+            )
+        elif self.schedule_config['name'] == 'ReduceLROnPlateau':
             self.scheduler = optim.lr_scheduler.ReduceLROnPlateau(
                 self.optimizer,
-                mode=schedule_config['mode'],
-                factor=schedule_config['factor'],
-                patience=schedule_config['patience'],
-                min_lr=schedule_config['min_lr'],
+                mode=self.schedule_config['ReduceLROnPlateau']['mode'],
+                factor=self.schedule_config['ReduceLROnPlateau']['factor'],
+                patience=self.schedule_config['ReduceLROnPlateau']['patience'],
+                min_lr=self.schedule_config['min_lr'],
             )
         else:
             self.scheduler = None
@@ -109,7 +115,10 @@ class TrainNet:
                   f'Validate Loss: {validate_loss:.4f}, Validate Accuracy: {validate_accuracy:.2f}%')
             # variable learning_rate
             if self.scheduler:
-                self.scheduler.step(validate_accuracy)
+                if self.schedule_config['name'] == 'CosineAnnealingLR':
+                    self.scheduler.step()
+                elif self.schedule_config['name'] == 'ReduceLROnPlateau':
+                    self.scheduler.step(validate_accuracy)
             # early stopping
             if validate_loss < self.best_validate_loss - self.early_stopping_min_delta:
                 self.best_validate_loss = validate_loss

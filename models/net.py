@@ -17,6 +17,8 @@ class Net(nn.Module):
             nn.MaxPool2d(kernel_size=2, stride=2),
             # (batch_size, 256, 7, 7)
             layers.ResidualBlock(in_channels=256, out_channels=512, kernel_size=3, stride=1, padding=1),
+            # (batch_size, 256, 7, 7)
+            nn.MaxPool2d(kernel_size=2, stride=2),
             # (batch_size, 512, 3, 3)
             nn.Flatten(),
             # (batch_size, 512 * 3 * 3)
