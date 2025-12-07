@@ -6,11 +6,11 @@ data:
   test_labels_file: "t10k-labels-idx1-ubyte"
 
 model:
-  batch_size: 128
+  batch_size: 96
   epochs: 80
   learning_rate: 0.0008
   weight_decay: 0.01
-  device: "cpu"
+  device: "cuda"
 
   scheduler:
     name: "CosineAnnealingLR"
