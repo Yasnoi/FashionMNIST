@@ -9,9 +9,8 @@ from utils.data_loader import fashion_mnist_data_loader
 
 class EvaluateNet:
     def __init__(self, config):
-        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
         self.config = config
+        self.device = self.config['model']['device'] = 'cuda' if torch.cuda.is_available() else 'cpu'
         self.data_loader = fashion_mnist_data_loader(config, mode='test')
 
         self.model = Net().to(self.device)
@@ -20,7 +19,7 @@ class EvaluateNet:
         model_path = os.path.join(checkpoint_dir, model_save_name)
         if not os.path.exists(model_path):
             raise FileNotFoundError(f'Error: Model checkpoint not found at {model_path}')
-        self.model.load_state_dict(torch.load(model_path))
+        self.model.load_state_dict(torch.load(model_path, map_location=self.device))
 
         self.criterion = nn.CrossEntropyLoss()
 
