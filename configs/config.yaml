@@ -10,7 +10,6 @@ model:
   epochs: 80
   learning_rate: 0.0008
   weight_decay: 0.01
-  device: "cuda"
 
   scheduler:
     name: "CosineAnnealingLR"

@@ -1,5 +1,4 @@
 import torch
-import torch.optim as optim
 from torch import nn
 import os
 import csv
@@ -10,8 +9,9 @@ from utils.data_loader import fashion_mnist_data_loader
 
 class EvaluateNet:
     def __init__(self, config):
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
         self.config = config
-        self.device = torch.device(config['model']['device'])
         self.data_loader = fashion_mnist_data_loader(config, mode='test')
 
         self.model = Net().to(self.device)

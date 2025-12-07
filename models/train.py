@@ -11,8 +11,9 @@ from utils.data_loader import fashion_mnist_data_loader
 
 class TrainNet:
     def __init__(self, config):
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
         self.config = config
-        self.device = torch.device(config['model']['device'])
         self.train_data_loader, self.validate_data_loader = fashion_mnist_data_loader(self.config, mode='train')
 
         self.epochs = config['model']['epochs']
