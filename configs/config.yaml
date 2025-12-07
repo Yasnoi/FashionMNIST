@@ -33,4 +33,5 @@ model:
 output:
   checkpoint_dir: "outputs/checkpoints/"
   log_dir: "outputs/logs/"
+  result_dir: "outputs/predictions/"
   model_save_name: "Fashion_MNIST_model"
