@@ -4,6 +4,7 @@ from torch import nn
 import os
 import copy
 from datetime import datetime
+import numpy as np
 
 from models.net import Net
 from utils.data_loader import fashion_mnist_data_loader
@@ -52,6 +53,22 @@ class TrainNet:
         self.early_stopping_counter = 0
         self.early_stopping_state = None
 
+    def mixup_data(self, x, y, alpha=1.0):
+        """Returns mixed inputs, pairs of targets, and lambda"""
+        if alpha > 0:
+            lam = np.random.beta(alpha, alpha)
+        else:
+            lam = 1
+        batch_size = x.size()[0]
+        index = torch.randperm(batch_size).to(x.device)
+
+        mixed_x = lam * x + (1 - lam) * x[index, :]
+        y_a, y_b = y, y[index]
+        return mixed_x, y_a, y_b, lam
+
+    def mixup_criterion(self, criterion, pred, y_a, y_b, lam):
+        return lam * criterion(pred, y_a) + (1 - lam) * criterion(pred, y_b)
+
     def train_epoch(self, data_loader):
         self.model.train()
         epoch_loss = 0
@@ -60,16 +77,17 @@ class TrainNet:
 
         for batch_idx, (data, target) in enumerate(data_loader):
             data, target = data.to(self.device), target.to(self.device)
+            inputs, targets_a, targets_b, lam = self.mixup_data(data, target)
 
             self.optimizer.zero_grad()
-            output = self.model(data)
-            loss = self.criterion(output, target)
+            outputs = self.model(inputs)
+            loss = self.mixup_criterion(self.criterion, outputs, targets_a, targets_b, lam)
             loss.backward()
             self.optimizer.step()
 
             epoch_loss += loss.item() * data.size(0)
 
-            predictions = output.argmax(dim=1, keepdim=True)
+            predictions = outputs.argmax(dim=1, keepdim=True)
             correct_predictions += predictions.eq(target.view_as(predictions)).sum().item()
             total_samples += target.shape[0]
 
